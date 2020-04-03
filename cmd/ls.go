@@ -28,26 +28,60 @@ var lsCmd = &cobra.Command{
 		recursive, _ := cmd.Flags().GetBool("recursive")
 		decrypt, _ := cmd.Flags().GetBool("decrypt")
 
-		fmt.Println(text.FgBlue.Sprintf("Listing parameter(s) for \"%s\"", path))
+		fmt.Println(text.FgBlue.Sprintf("Listing parameters for \"%s\"", path))
 
-		getParams(&path, &recursive, &decrypt, []*ssm.Parameter{}, nil)
+		options := &getParamsOptions{
+			Client:    ssm.New(session),
+			Path:      &path,
+			Recursive: &recursive,
+			Decrypt:   &decrypt,
+		}
+
+		params := getParams(options, []*ssm.Parameter{}, nil)
+
+		sort.Slice(params, func(i, j int) bool {
+			return strings.ToLower(*params[i].Name) < strings.ToLower(*params[j].Name)
+		})
+
+		tw := table.NewWriter()
+
+		tw.AppendHeader(table.Row{"Name", "Value", "Type", "Last Modified"})
+
+		for _, param := range params {
+			name := *param.Name
+			rest := strings.Replace(name, name[0:len(path)+1], "", -1)
+
+			tw.AppendRow(table.Row{
+				rest,
+				*param.Value,
+				*param.Type,
+				formatDate(param.LastModifiedDate),
+			})
+		}
+
+		fmt.Println(fmt.Sprintf("\n%s", tw.Render()))
 	},
 }
 
-func getParams(path *string, recursive *bool, decrypt *bool, params []*ssm.Parameter, nextToken *string) {
-	client := ssm.New(session)
+type getParamsOptions struct {
+	Client    *ssm.SSM
+	Path      *string
+	Recursive *bool
+	Decrypt   *bool
+}
 
+func getParams(options *getParamsOptions, params []*ssm.Parameter, nextToken *string) []*ssm.Parameter {
 	cfg := &ssm.GetParametersByPathInput{
-		Path:           path,
-		Recursive:      recursive,
-		WithDecryption: decrypt,
+		Path:           options.Path,
+		Recursive:      options.Recursive,
+		WithDecryption: options.Decrypt,
 	}
 
 	if nextToken != nil {
 		cfg.NextToken = nextToken
 	}
 
-	out, err := client.GetParametersByPath(cfg)
+	out, err := options.Client.GetParametersByPath(cfg)
 	if err != nil {
 		panic(err)
 	}
@@ -55,31 +89,10 @@ func getParams(path *string, recursive *bool, decrypt *bool, params []*ssm.Param
 	params = append(params, out.Parameters...)
 
 	if out.NextToken != nil {
-		getParams(path, recursive, decrypt, params, out.NextToken)
-		return
+		return getParams(options, params, out.NextToken)
 	}
 
-	sort.Slice(params, func(i, j int) bool {
-		return strings.ToLower(*params[i].Name) < strings.ToLower(*params[j].Name)
-	})
-
-	tw := table.NewWriter()
-
-	tw.AppendHeader(table.Row{"Name", "Value", "Type", "Last Modified"})
-
-	for _, param := range params {
-		name := *param.Name
-		rest := strings.Replace(name, name[0:len(*path)+1], "", -1)
-
-		tw.AppendRow(table.Row{
-			rest,
-			*param.Value,
-			*param.Type,
-			formatDate(param.LastModifiedDate),
-		})
-	}
-
-	fmt.Println(tw.Render())
+	return params
 }
 
 func init() {
