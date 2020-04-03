@@ -13,7 +13,7 @@ import (
 
 var putCmd = &cobra.Command{
 	Use:   "put <path> <value>",
-	Short: "Remove parameter or parameters by path",
+	Short: "Put parameter by path",
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
 			return errors.New("requires a path")

@@ -13,7 +13,7 @@ import (
 
 var migrateCmd = &cobra.Command{
 	Use:   "migrate <source path> [destination path]",
-	Short: "Remove parameter or parameters by path",
+	Short: "Migrate parameters by path",
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
 			return errors.New("requires a path")

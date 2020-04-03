@@ -11,7 +11,7 @@ import (
 
 var rmCmd = &cobra.Command{
 	Use:   "rm <path>",
-	Short: "Remove parameter or parameters by path",
+	Short: "Remove parameter by path",
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
 			return errors.New("requires a path")
