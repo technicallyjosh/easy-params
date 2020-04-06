@@ -1,3 +1,6 @@
+[![Release](https://img.shields.io/github/release/technicallyjosh/easy-params.svg)](https://github.com/technicallyjosh/easy-params/releases/latest)
+![Build](https://github.com/technicallyjosh/easy-params/workflows/Build/badge.svg)
+
 # Easy SSM Parameters
 
 Simple SSM Parameter Store interactions via a CLI.
