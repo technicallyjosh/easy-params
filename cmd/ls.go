@@ -22,45 +22,66 @@ var lsCmd = &cobra.Command{
 
 		return nil
 	},
-	Run: func(cmd *cobra.Command, args []string) {
-		path := args[0]
+	Run: runLsCmd,
+}
 
-		recursive, _ := cmd.Flags().GetBool("recursive")
-		decrypt, _ := cmd.Flags().GetBool("decrypt")
+func runLsCmd(cmd *cobra.Command, args []string) {
+	path := args[0]
 
-		fmt.Println(text.FgBlue.Sprintf("Listing parameters for \"%s\"", path))
+	recursive, _ := cmd.Flags().GetBool("recursive")
+	decrypt, _ := cmd.Flags().GetBool("decrypt")
+	displayValues, _ := cmd.Flags().GetBool("values")
+	plain, _ := cmd.Flags().GetBool("plain")
 
-		options := &getParamsOptions{
-			Client:    ssm.New(session),
-			Path:      &path,
-			Recursive: &recursive,
-			Decrypt:   &decrypt,
+	fmt.Println(text.FgBlue.Sprintf("Listing parameters for \"%s\"", path))
+
+	options := &getParamsOptions{
+		Client:    ssm.New(session),
+		Path:      &path,
+		Recursive: &recursive,
+		Decrypt:   &decrypt,
+	}
+
+	params := getParams(options, []*ssm.Parameter{}, nil)
+
+	sort.Slice(params, func(i, j int) bool {
+		return strings.ToLower(*params[i].Name) < strings.ToLower(*params[j].Name)
+	})
+
+	tw := table.NewWriter()
+
+	header := table.Row{"Name", "Type", "Last Modified"}
+
+	if displayValues {
+		header = insertColumn(header, 1, "Value")
+	}
+
+	tw.AppendHeader(header)
+
+	for _, param := range params {
+		name := *param.Name
+		rest := strings.Replace(name, name[0:len(path)+1], "", -1)
+
+		row := table.Row{
+			rest,
+			*param.Type,
+			formatDate(param.LastModifiedDate),
 		}
 
-		params := getParams(options, []*ssm.Parameter{}, nil)
-
-		sort.Slice(params, func(i, j int) bool {
-			return strings.ToLower(*params[i].Name) < strings.ToLower(*params[j].Name)
-		})
-
-		tw := table.NewWriter()
-
-		tw.AppendHeader(table.Row{"Name", "Value", "Type", "Last Modified"})
-
-		for _, param := range params {
-			name := *param.Name
-			rest := strings.Replace(name, name[0:len(path)+1], "", -1)
-
-			tw.AppendRow(table.Row{
-				rest,
-				*param.Value,
-				*param.Type,
-				formatDate(param.LastModifiedDate),
-			})
+		if displayValues {
+			row = insertColumn(row, 1, *param.Value)
 		}
 
-		fmt.Println(fmt.Sprintf("\n%s", tw.Render()))
-	},
+		if plain {
+			fmt.Println(fmt.Sprintf("%s: %s", rest, *param.Value))
+		}
+
+		tw.AppendRow(row)
+	}
+
+	if !plain {
+		fmt.Println(tw.Render())
+	}
 }
 
 type getParamsOptions struct {
@@ -98,6 +119,8 @@ func getParams(options *getParamsOptions, params []*ssm.Parameter, nextToken *st
 func init() {
 	lsCmd.Flags().BoolP("recursive", "r", true, "Recursively get values based on path.")
 	lsCmd.Flags().BoolP("decrypt", "d", true, "Decrypt SecureString values.")
+	lsCmd.Flags().BoolP("values", "v", false, "Display values.")
+	lsCmd.Flags().BoolP("plain", "p", false, "Plain text instead of tables.")
 
 	rootCmd.AddCommand(lsCmd)
 }

@@ -13,15 +13,24 @@ import (
 	homedir "github.com/mitchellh/go-homedir"
 )
 
-var cfgFile string
-var session *awsSession.Session
-var useLocalTime bool
-var region string
+var (
+	version      = "dev"
+	cfgFile      string
+	showVersion  bool
+	session      *awsSession.Session
+	useLocalTime bool
+	region       string
+)
 
 var rootCmd = &cobra.Command{
 	Use:   "ezp",
 	Short: "An easy AWS Parameter Store CLI",
 	Run: func(cmd *cobra.Command, args []string) {
+		if showVersion {
+			cmd.Println("version", version)
+			os.Exit(0)
+		}
+
 		if len(args) == 0 {
 			cmd.Help()
 			os.Exit(0)
@@ -47,6 +56,7 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.ez-params.yaml)")
+	rootCmd.PersistentFlags().BoolVar(&showVersion, "version", false, "Show version")
 	rootCmd.PersistentFlags().BoolVarP(&useLocalTime, "useLocalTime", "l", true, "convert UTC to local time")
 	rootCmd.PersistentFlags().StringVar(&region, "region", "", "AWS Region to use.")
 }
