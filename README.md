@@ -1,5 +1,5 @@
 [![Release](https://img.shields.io/github/release/technicallyjosh/easy-params.svg)](https://github.com/technicallyjosh/easy-params/releases/latest)
-![Build](https://github.com/technicallyjosh/easy-params/workflows/Build/badge.svg)
+[![Build](https://github.com/technicallyjosh/easy-params/workflows/Build/badge.svg)](https://github.com/technicallyjosh/easy-params/actions?query=workflow%3ABuild)
 
 # Easy SSM Parameters
 
