@@ -1,5 +1,8 @@
+.DS_Store
 easy-params
-ezp
+ezparams
+
+dist/
 
 # Created by https://www.gitignore.io/api/go
 # Edit at https://www.gitignore.io/?templates=go
