@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/jedib0t/go-pretty/text"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
@@ -23,7 +22,7 @@ var (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "ezp",
+	Use:   "ezparams",
 	Short: "An easy AWS Parameter Store CLI",
 	Run: func(cmd *cobra.Command, args []string) {
 		if showVersion {
@@ -36,11 +35,6 @@ var rootCmd = &cobra.Command{
 			os.Exit(0)
 		}
 	},
-}
-
-func er(msg interface{}) {
-	fmt.Println(text.FgRed.Sprintf("Error: %s", msg))
-	os.Exit(1)
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -68,12 +62,13 @@ func initConfig() {
 	} else {
 		home, err := homedir.Dir()
 		if err != nil {
-			er(err)
+			fmt.Println(fmt.Sprintf("Error: %s", err.Error()))
+			os.Exit(1)
 		}
 
-		// Search config in home directory with name ".ez-params" (without extension).
+		// Search config in home directory with name ".ezparams" (without extension).
 		viper.AddConfigPath(home)
-		viper.SetConfigName(".ez-params")
+		viper.SetConfigName(".ezparams")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match

@@ -3,6 +3,7 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -38,7 +39,8 @@ func runMigrateCmd(cmd *cobra.Command, args []string) {
 
 	if regionTo == "" {
 		if pathTo == pathFrom {
-			er(errors.New("destination path cannot match source path if region-from matches region-to"))
+			cmd.PrintErr("destination path cannot match source path if region-from matches region-to")
+			os.Exit(1)
 		}
 
 		regionTo = regionFrom
@@ -88,7 +90,8 @@ func runMigrateCmd(cmd *cobra.Command, args []string) {
 				continue
 			}
 
-			er(err)
+			cmd.PrintErr(err)
+			os.Exit(1)
 		}
 
 		fmt.Println(text.FgGreen.Sprintf("Created parameter \"%s\" successfully.", name))
