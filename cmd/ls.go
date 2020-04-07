@@ -73,7 +73,11 @@ func runLsCmd(cmd *cobra.Command, args []string) {
 		}
 
 		if plain {
-			fmt.Println(fmt.Sprintf("%s: %s", rest, *param.Value))
+			if displayValues {
+				fmt.Println(fmt.Sprintf("%s: %s", rest, *param.Value))
+			} else {
+				fmt.Println(rest)
+			}
 		}
 
 		tw.AppendRow(row)
