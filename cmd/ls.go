@@ -121,10 +121,10 @@ func getParams(options *getParamsOptions, params []*ssm.Parameter, nextToken *st
 }
 
 func init() {
-	lsCmd.Flags().BoolP("recursive", "r", true, "Recursively get values based on path.")
-	lsCmd.Flags().BoolP("decrypt", "d", true, "Decrypt SecureString values.")
-	lsCmd.Flags().BoolP("values", "v", false, "Display values.")
-	lsCmd.Flags().BoolP("plain", "p", false, "Plain text instead of tables.")
+	lsCmd.Flags().BoolP("recursive", "r", true, "Recursively get values based on path")
+	lsCmd.Flags().BoolP("decrypt", "d", true, "Decrypt SecureString values")
+	lsCmd.Flags().BoolP("values", "v", false, "Display values")
+	lsCmd.Flags().BoolP("plain", "p", false, "Plain text instead of tables")
 
 	rootCmd.AddCommand(lsCmd)
 }
