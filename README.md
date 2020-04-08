@@ -43,9 +43,9 @@ Available Commands:
   rm          Remove parameter by path
 
 Flags:
-      --config string   config file (default is $HOME/.ez-params.yaml)
+      --config string   config file (default is $HOME/.ezparams.yaml)
   -h, --help            help for ezparams
-      --region string   AWS Region to use.
+      --region string   AWS Region to use
   -l, --useLocalTime    convert UTC to local time (default true)
       --version         Show version
 

@@ -49,7 +49,7 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.ez-params.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.ezparams.yaml)")
 	rootCmd.PersistentFlags().BoolVar(&showVersion, "version", false, "Show version")
 	rootCmd.PersistentFlags().BoolVarP(&useLocalTime, "useLocalTime", "l", true, "convert UTC to local time")
 	rootCmd.PersistentFlags().StringVar(&region, "region", "", "AWS Region to use")
