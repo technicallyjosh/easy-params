@@ -50,9 +50,9 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.ezparams.yaml)")
-	rootCmd.PersistentFlags().BoolVar(&showVersion, "version", false, "Show version")
-	rootCmd.PersistentFlags().BoolVarP(&useLocalTime, "useLocalTime", "l", true, "convert UTC to local time")
-	rootCmd.PersistentFlags().StringVar(&region, "region", "", "AWS Region to use")
+	rootCmd.PersistentFlags().BoolVar(&showVersion, "version", false, "show version")
+	rootCmd.PersistentFlags().BoolVarP(&useLocalTime, "local-time", "l", true, "convert UTC to local time")
+	rootCmd.PersistentFlags().StringVar(&region, "region", "", "AWS region to use")
 }
 
 // initConfig reads in config file and ENV variables if set.

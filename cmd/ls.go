@@ -3,7 +3,6 @@ package cmd
 import (
 	"errors"
 	"fmt"
-	"sort"
 	"strings"
 
 	ssm "github.com/aws/aws-sdk-go/service/ssm"
@@ -44,9 +43,7 @@ func runLsCmd(cmd *cobra.Command, args []string) {
 
 	params := getParams(options, []*ssm.Parameter{}, nil)
 
-	sort.Slice(params, func(i, j int) bool {
-		return strings.ToLower(*params[i].Name) < strings.ToLower(*params[j].Name)
-	})
+	sortParams(params)
 
 	tw := table.NewWriter()
 
@@ -121,10 +118,10 @@ func getParams(options *getParamsOptions, params []*ssm.Parameter, nextToken *st
 }
 
 func init() {
-	lsCmd.Flags().BoolP("recursive", "r", true, "Recursively get values based on path")
-	lsCmd.Flags().BoolP("decrypt", "d", true, "Decrypt SecureString values")
-	lsCmd.Flags().BoolP("values", "v", false, "Display values")
-	lsCmd.Flags().BoolP("plain", "p", false, "Plain text instead of tables")
+	lsCmd.Flags().BoolP("recursive", "r", true, "recursively get values based on path")
+	lsCmd.Flags().BoolP("decrypt", "d", true, "decrypt \"SecureString\" values")
+	lsCmd.Flags().BoolP("values", "v", false, "display values")
+	lsCmd.Flags().BoolP("plain", "p", false, "plain text instead of table")
 
 	rootCmd.AddCommand(lsCmd)
 }

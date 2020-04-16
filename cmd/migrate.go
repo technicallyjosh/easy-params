@@ -99,9 +99,9 @@ func runMigrateCmd(cmd *cobra.Command, args []string) {
 }
 
 func init() {
-	migrateCmd.Flags().StringP("region-from", "f", "", "The region to migrate from.")
-	migrateCmd.Flags().StringP("region-to", "t", "", "The region to migrate to.")
-	migrateCmd.Flags().Bool("overwrite", false, "Overwrite destination params.")
+	migrateCmd.Flags().StringP("region-from", "f", "", "the region to migrate from")
+	migrateCmd.Flags().StringP("region-to", "t", "", "the region to migrate to")
+	migrateCmd.Flags().Bool("overwrite", false, "overwrite destination params")
 
 	migrateCmd.MarkFlagRequired("region-from")
 

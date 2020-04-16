@@ -56,7 +56,7 @@ var putCmd = &cobra.Command{
 }
 
 func init() {
-	putCmd.Flags().BoolP("overwrite", "o", false, "Overwrite param if exists.")
+	putCmd.Flags().BoolP("overwrite", "o", false, "overwrite param if exists.")
 	putCmd.Flags().StringP("type", "t", "SecureString", "Type of parameter.")
 
 	rootCmd.AddCommand(putCmd)
