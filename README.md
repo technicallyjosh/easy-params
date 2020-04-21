@@ -116,7 +116,7 @@ $ ezparams rm --help
 Remove parameter(s) by path
 
 Usage:
-  ezparams rm <path> [flags]
+  ezparams rm <path(s)> [flags]
 
 Flags:
   -h, --help        help for rm
