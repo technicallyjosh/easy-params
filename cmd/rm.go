@@ -13,7 +13,7 @@ import (
 )
 
 var rmCmd = &cobra.Command{
-	Use:   "rm <path>",
+	Use:   "rm <path(s)>",
 	Short: "Remove parameter(s) by path",
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
@@ -68,22 +68,30 @@ func runRmCmd(cmd *cobra.Command, args []string) {
 			os.Exit(0)
 		}
 	} else {
-		names = append(names, &path)
+		for _, arg := range args {
+			// declare in loop for pointer to not be repeated
+			str := arg
+			names = append(names, &str)
+		}
 	}
 
 	chunks := getStringChunks(names, 10)
 
+	num := 0
+
 	for _, chunk := range chunks {
-		_, err := client.DeleteParameters(&ssm.DeleteParametersInput{
+		res, err := client.DeleteParameters(&ssm.DeleteParametersInput{
 			Names: chunk,
 		})
 
 		if err != nil {
 			panic(err)
 		}
+
+		num += len(res.DeletedParameters)
 	}
 
-	fmt.Println(text.FgGreen.Sprintf("Deleted %d parameters successfully", len(names)))
+	fmt.Println(text.FgGreen.Sprintf("Deleted %d parameters successfully", num))
 }
 
 func init() {
