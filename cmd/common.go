@@ -28,15 +28,12 @@ func insertColumn(row table.Row, index int, item interface{}) table.Row {
 	return row
 }
 
-func getStringChunks(arr []*string, batchSize int) [][]*string {
-	batches := make([][]*string, 0, (len(arr)+batchSize-1)/batchSize)
-
-	for batchSize < len(arr) {
-		arr, batches = arr[batchSize:], append(batches, arr[0:batchSize:batchSize])
+func getStringChunks(items []*string, chunkSize int) (chunks [][]*string) {
+	for chunkSize < len(items) {
+		items, chunks = items[chunkSize:], append(chunks, items[0:chunkSize:chunkSize])
 	}
-	batches = append(batches, arr)
 
-	return batches
+	return append(chunks, items)
 }
 
 func sortParams(params []*ssm.Parameter) {
