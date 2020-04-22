@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	version      = "dev"
+	version      = ""
 	cfgFile      string
 	showVersion  bool
 	session      *awsSession.Session
@@ -26,7 +26,7 @@ var rootCmd = &cobra.Command{
 	Short: "An easy AWS Parameter Store CLI",
 	Run: func(cmd *cobra.Command, args []string) {
 		if showVersion {
-			cmd.Println("version", version)
+			cmd.Println("version:", version)
 			os.Exit(0)
 		}
 
