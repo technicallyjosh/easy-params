@@ -1,4 +1,4 @@
-module github.com/technicallyjosh/ez-params
+module github.com/technicallyjosh/easy-params
 
 go 1.14
 
