@@ -41,3 +41,9 @@ func sortParams(params []*ssm.Parameter) {
 		return strings.ToLower(*params[i].Name) < strings.ToLower(*params[j].Name)
 	})
 }
+
+func sortDiffRows(rows []*diffRow) {
+	sort.Slice(rows, func(i, j int) bool {
+		return strings.ToLower(rows[i].Key) < strings.ToLower(rows[j].Key)
+	})
+}
