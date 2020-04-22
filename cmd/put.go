@@ -15,44 +15,42 @@ var putCmd = &cobra.Command{
 	Use:   "put <path> <value>",
 	Short: "Put parameter by path",
 	Args: func(cmd *cobra.Command, args []string) error {
-		if len(args) == 0 {
-			return errors.New("requires a path")
-		}
-
-		if len(args) == 1 {
-			return errors.New("requires a value")
+		if len(args) < 2 {
+			return errors.New("requires a path and a value")
 		}
 
 		return nil
 	},
-	Run: func(cmd *cobra.Command, args []string) {
-		path := args[0]
-		value := args[1]
-		overwrite, _ := cmd.Flags().GetBool("overwrite")
-		valueType, _ := cmd.Flags().GetString("type")
+	Run: runPutCmd,
+}
 
-		client := ssm.New(session)
+func runPutCmd(cmd *cobra.Command, args []string) {
+	path := args[0]
+	value := args[1]
+	overwrite, _ := cmd.Flags().GetBool("overwrite")
+	valueType, _ := cmd.Flags().GetString("type")
 
-		fmt.Println(text.FgBlue.Sprintf("Putting Parameter \"%s\"", path))
+	client := ssm.New(session)
 
-		_, err := client.PutParameter(&ssm.PutParameterInput{
-			Name:      &path,
-			Value:     &value,
-			Type:      &valueType,
-			Overwrite: &overwrite,
-		})
+	fmt.Println(text.FgBlue.Sprintf("Putting Parameter \"%s\"", path))
 
-		if err != nil {
-			if strings.HasPrefix(err.Error(), "ParameterAlreadyExists") {
-				fmt.Println(text.FgRed.Sprintf("Parameter \"%s\" already exists. Use the --overwrite option to update.", path))
-				os.Exit(1)
-			} else {
-				panic(err)
-			}
+	_, err := client.PutParameter(&ssm.PutParameterInput{
+		Name:      &path,
+		Value:     &value,
+		Type:      &valueType,
+		Overwrite: &overwrite,
+	})
+
+	if err != nil {
+		if strings.HasPrefix(err.Error(), "ParameterAlreadyExists") {
+			fmt.Println(text.FgRed.Sprintf("Parameter \"%s\" already exists. Use the --overwrite option to update.", path))
+			os.Exit(1)
+		} else {
+			panic(err)
 		}
+	}
 
-		fmt.Println(text.FgGreen.Sprintf("Put parameter \"%s\" successfully", path))
-	},
+	fmt.Println(text.FgGreen.Sprintf("Put parameter \"%s\" successfully", path))
 }
 
 func init() {
