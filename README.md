@@ -36,6 +36,7 @@ Usage:
   ezparams [command]
 
 Available Commands:
+  diff        Shows the difference recursively between 2 paths.
   help        Help about any command
   ls          List parameters by path
   migrate     Migrate parameters by path
@@ -46,8 +47,8 @@ Flags:
       --config string   config file (default is $HOME/.ezparams.yaml)
   -h, --help            help for ezparams
   -l, --local-time      convert UTC to local time (default true)
-      --region string   AWS Region to use
-      --version         Show version
+      --region string   AWS region to use
+      --version         show version
 
 Use "ezparams [command] --help" for more information about a command.
 ```
@@ -146,6 +147,25 @@ Flags:
       --overwrite            overwrite destination params
   -f, --region-from string   the region to migrate from
   -t, --region-to string     the region to migrate to
+
+Global Flags:
+      --config string   config file (default is $HOME/.ezparams.yaml)
+  -l, --local-time      convert UTC to local time (default true)
+      --region string   AWS region to use
+      --version         show version
+```
+
+### `diff`
+
+```console
+$ ezparams diff --help
+Shows the difference recursively between 2 paths.
+
+Usage:
+  ezparams diff <path 1> <path 2> [flags]
+
+Flags:
+  -h, --help   help for diff
 
 Global Flags:
       --config string   config file (default is $HOME/.ezparams.yaml)
