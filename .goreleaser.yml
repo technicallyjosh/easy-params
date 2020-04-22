@@ -6,7 +6,7 @@ builds:
     env:
       - CGO_ENABLED=0
     ldflags:
-      - X github.com/technicallyjosh/easy-params/cmd.version={{ .Version }}
+      - -X github.com/technicallyjosh/easy-params/cmd.version={{ .Version }}
 archives:
   - replacements:
       darwin: Darwin
