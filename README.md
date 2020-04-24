@@ -165,7 +165,8 @@ Usage:
   ezparams diff <path 1> <path 2> [flags]
 
 Flags:
-  -h, --help   help for diff
+  -h, --help     help for diff
+  -v, --values   show value diffs
 
 Global Flags:
       --config string   config file (default is $HOME/.ezparams.yaml)

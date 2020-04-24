@@ -27,13 +27,18 @@ var diffCmd = &cobra.Command{
 }
 
 type diffRow struct {
-	Key  string
-	Path int
+	Key    string
+	Value1 string
+	Value2 string
+	Path   int
 }
 
 func runDiffCmd(cmd *cobra.Command, args []string) {
 	path1 := args[0]
 	path2 := args[1]
+
+	showValues, _ := cmd.Flags().GetBool("values")
+	decrypt, _ := cmd.Flags().GetBool("decrypt")
 
 	fmt.Println(text.FgBlue.Sprintf("Getting diff between \"%s\" and \"%s\"...", path1, path2))
 
@@ -41,6 +46,7 @@ func runDiffCmd(cmd *cobra.Command, args []string) {
 		Client:    ssm.New(session),
 		Path:      &path1,
 		Recursive: aws.Bool(true),
+		Decrypt:   &decrypt,
 	}
 
 	params1 := getParams(options, []*ssm.Parameter{}, nil)
@@ -51,22 +57,32 @@ func runDiffCmd(cmd *cobra.Command, args []string) {
 	tw := table.NewWriter()
 	tw.Style().Format.Header = text.FormatLower
 
-	tw.AppendHeader(table.Row{path1, path2})
+	headerRow := table.Row{path1, path2}
+
+	if showValues {
+		headerRow = insertColumn(headerRow, 1, "Value")
+		headerRow = insertColumn(headerRow, 3, "Value")
+	}
+
+	tw.AppendHeader(headerRow)
 
 	var rows []*diffRow
 
 	for i := range params1 {
 		name := *params1[i].Name
+		val := *params1[i].Value
 		key := strings.Replace(name, name[0:len(path1)+1], "", -1)
 
 		rows = append(rows, &diffRow{
-			Key:  key,
-			Path: 1,
+			Key:    key,
+			Value1: val,
+			Path:   1,
 		})
 	}
 
 	for i := range params2 {
 		name := *params2[i].Name
+		val := *params2[i].Value
 		key := strings.Replace(name, name[0:len(path2)+1], "", -1)
 
 		updated := false
@@ -76,6 +92,7 @@ func runDiffCmd(cmd *cobra.Command, args []string) {
 			row := rows[j]
 
 			if row.Key == key {
+				row.Value2 = val
 				row.Path = 0
 				updated = true
 			}
@@ -83,8 +100,9 @@ func runDiffCmd(cmd *cobra.Command, args []string) {
 
 		if !updated {
 			rows = append(rows, &diffRow{
-				Key:  key,
-				Path: 2,
+				Key:    key,
+				Value2: val,
+				Path:   2,
 			})
 		}
 	}
@@ -92,8 +110,8 @@ func runDiffCmd(cmd *cobra.Command, args []string) {
 	sortDiffRows(rows)
 
 	for i := range rows {
-		var text1 string
-		var text2 string
+		var key1 string
+		var key2 string
 
 		key := rows[i].Key
 		greenKey := text.FgGreen.Sprint(key)
@@ -101,22 +119,41 @@ func runDiffCmd(cmd *cobra.Command, args []string) {
 
 		switch path := rows[i].Path; path {
 		case 0:
-			text1 = key
-			text2 = key
+			key1 = key
+			key2 = key
 		case 1:
-			text1 = greenKey
-			text2 = redKey
+			key1 = greenKey
+			key2 = redKey
 		case 2:
-			text1 = redKey
-			text2 = greenKey
+			key1 = redKey
+			key2 = greenKey
 		}
 
-		tw.AppendRow(table.Row{text1, text2})
+		row := table.Row{key1, key2}
+
+		if showValues {
+			value1 := rows[i].Value1
+			value2 := rows[i].Value2
+
+			// if both exist and there is a difference
+			if value1 != "" && value2 != "" && value1 != value2 {
+				value1 = text.FgYellow.Sprint(value1)
+				value2 = text.FgYellow.Sprint(value2)
+			}
+
+			row = insertColumn(row, 1, value1)
+			row = insertColumn(row, 3, value2)
+		}
+
+		tw.AppendRow(row)
 	}
 
 	fmt.Println(tw.Render())
 }
 
 func init() {
+	diffCmd.Flags().BoolP("values", "v", false, "show value diffs")
+	diffCmd.Flags().BoolP("decrypt", "d", true, "decrypt \"SecureString\" values")
+
 	rootCmd.AddCommand(diffCmd)
 }
