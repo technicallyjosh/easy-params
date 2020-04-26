@@ -39,6 +39,7 @@ func runDiffCmd(cmd *cobra.Command, args []string) {
 
 	showValues, _ := cmd.Flags().GetBool("values")
 	decrypt, _ := cmd.Flags().GetBool("decrypt")
+	widthLimit, _ := cmd.Flags().GetInt("width-limit")
 
 	fmt.Println(text.FgBlue.Sprintf("Getting diff between \"%s\" and \"%s\"...", path1, path2))
 
@@ -62,6 +63,19 @@ func runDiffCmd(cmd *cobra.Command, args []string) {
 	if showValues {
 		headerRow = insertColumn(headerRow, 1, "Value")
 		headerRow = insertColumn(headerRow, 3, "Value")
+
+		if widthLimit > 0 {
+			tw.SetColumnConfigs([]table.ColumnConfig{
+				{
+					Number:   2,
+					WidthMax: widthLimit,
+				},
+				{
+					Number:   4,
+					WidthMax: widthLimit,
+				},
+			})
+		}
 	}
 
 	tw.AppendHeader(headerRow)
@@ -154,6 +168,7 @@ func runDiffCmd(cmd *cobra.Command, args []string) {
 func init() {
 	diffCmd.Flags().BoolP("values", "v", false, "show value diffs")
 	diffCmd.Flags().BoolP("decrypt", "d", true, "decrypt \"SecureString\" values")
+	diffCmd.Flags().IntP("width-limit", "w", 0, "width limit of value output")
 
 	rootCmd.AddCommand(diffCmd)
 }

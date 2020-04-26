@@ -157,7 +157,9 @@ Global Flags:
 
 ### `diff`
 
-```console
+Simple diff between 2 paths. Can also diff values.
+
+````console
 $ ezparams diff --help
 Shows the difference recursively between 2 paths.
 
@@ -165,12 +167,14 @@ Usage:
   ezparams diff <path 1> <path 2> [flags]
 
 Flags:
-  -h, --help     help for diff
-  -v, --values   show value diffs
+  -d, --decrypt           decrypt "SecureString" values (default true)
+  -h, --help              help for diff
+  -v, --values            show value diffs
+  -w, --width-limit int   width limit of value output
 
 Global Flags:
       --config string   config file (default is $HOME/.ezparams.yaml)
   -l, --local-time      convert UTC to local time (default true)
       --region string   AWS region to use
-      --version         show version
-```
+      --version         show version```
+````
