@@ -37,15 +37,18 @@ Usage:
 
 Available Commands:
   diff        Shows the difference recursively between 2 paths.
+  get         A brief description of your command
   help        Help about any command
   ls          List parameters by path
   migrate     Migrate parameters by path
+  pull
   put         Put parameter by path
   rm          Remove parameter(s) by path
 
 Flags:
       --config string   config file (default is $HOME/.ezparams.yaml)
   -h, --help            help for ezparams
+      --load-config     load aws config from ~/.aws/config (default true)
   -l, --local-time      convert UTC to local time (default true)
       --region string   AWS region to use
       --version         show version
@@ -56,7 +59,8 @@ Use "ezparams [command] --help" for more information about a command.
 ## Basic Usage
 
 Right now it uses your default profile found in ~/.aws/credentials. You can change the region to use
-on any command but for now it pulls from your [default] defined.
+on any command but for now it pulls from your [default] defined. This will also load ~/.aws/config
+by default.
 
 ## Commands
 
@@ -80,6 +84,7 @@ Flags:
 
 Global Flags:
       --config string   config file (default is $HOME/.ezparams.yaml)
+      --load-config     load aws config from ~/.aws/config (default true)
   -l, --local-time      convert UTC to local time (default true)
       --region string   AWS region to use
       --version         show version
@@ -98,11 +103,12 @@ Usage:
 
 Flags:
   -h, --help          help for put
-  -o, --overwrite     Overwrite param if exists.
+  -o, --overwrite     overwrite param if exists.
   -t, --type string   Type of parameter. (default "SecureString")
 
 Global Flags:
       --config string   config file (default is $HOME/.ezparams.yaml)
+      --load-config     load aws config from ~/.aws/config (default true)
   -l, --local-time      convert UTC to local time (default true)
       --region string   AWS region to use
       --version         show version
@@ -125,6 +131,7 @@ Flags:
 
 Global Flags:
       --config string   config file (default is $HOME/.ezparams.yaml)
+      --load-config     load aws config from ~/.aws/config (default true)
   -l, --local-time      convert UTC to local time (default true)
       --region string   AWS region to use
       --version         show version
@@ -150,6 +157,7 @@ Flags:
 
 Global Flags:
       --config string   config file (default is $HOME/.ezparams.yaml)
+      --load-config     load aws config from ~/.aws/config (default true)
   -l, --local-time      convert UTC to local time (default true)
       --region string   AWS region to use
       --version         show version
@@ -159,7 +167,7 @@ Global Flags:
 
 Simple diff between 2 paths. Can also diff values.
 
-````console
+```console
 $ ezparams diff --help
 Shows the difference recursively between 2 paths.
 
@@ -174,7 +182,8 @@ Flags:
 
 Global Flags:
       --config string   config file (default is $HOME/.ezparams.yaml)
+      --load-config     load aws config from ~/.aws/config (default true)
   -l, --local-time      convert UTC to local time (default true)
       --region string   AWS region to use
-      --version         show version```
-````
+      --version         show version
+```

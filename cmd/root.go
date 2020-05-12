@@ -19,6 +19,7 @@ var (
 	session      *awsSession.Session
 	useLocalTime bool
 	region       string
+	loadConfig   bool
 )
 
 var rootCmd = &cobra.Command{
@@ -53,6 +54,7 @@ func init() {
 	rootCmd.PersistentFlags().BoolVar(&showVersion, "version", false, "show version")
 	rootCmd.PersistentFlags().BoolVarP(&useLocalTime, "local-time", "l", true, "convert UTC to local time")
 	rootCmd.PersistentFlags().StringVar(&region, "region", "", "AWS region to use")
+	rootCmd.PersistentFlags().BoolVar(&loadConfig, "load-config", true, "load aws config from ~/.aws/config")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -76,6 +78,10 @@ func initConfig() {
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
+	}
+
+	if loadConfig {
+		os.Setenv("AWS_SDK_LOAD_CONFIG", "true")
 	}
 
 	session = awsSession.Must(awsSession.NewSession(&aws.Config{
