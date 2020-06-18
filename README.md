@@ -102,9 +102,10 @@ Usage:
   ezparams put <path> <value> [flags]
 
 Flags:
-  -h, --help          help for put
-  -o, --overwrite     overwrite param if exists.
-  -t, --type string   Type of parameter. (default "SecureString")
+  -c, --context string   context mode for setting many values.
+  -h, --help             help for put
+  -o, --overwrite        overwrite param if exists.
+  -t, --type string      type of parameter. (default "SecureString")
 
 Global Flags:
       --config string   config file (default is $HOME/.ezparams.yaml)

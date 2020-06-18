@@ -47,3 +47,7 @@ func sortDiffRows(rows []*diffRow) {
 		return strings.ToLower(rows[i].Key) < strings.ToLower(rows[j].Key)
 	})
 }
+
+func stripSlash(str string) string {
+	return strings.TrimRight(strings.TrimLeft(str, "/"), "/")
+}
