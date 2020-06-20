@@ -25,7 +25,7 @@ var lsCmd = &cobra.Command{
 }
 
 func runLsCmd(cmd *cobra.Command, args []string) {
-	path := args[0]
+	path := fmt.Sprintf("/%s", stripSlash(args[0]))
 
 	recursive, _ := cmd.Flags().GetBool("recursive")
 	decrypt, _ := cmd.Flags().GetBool("decrypt")
