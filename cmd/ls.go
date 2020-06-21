@@ -57,7 +57,13 @@ func runLsCmd(cmd *cobra.Command, args []string) {
 
 	for _, param := range params {
 		name := *param.Name
-		rest := strings.Replace(name, name[0:len(path)+1], "", -1)
+		var rest string
+
+		if path == "/" {
+			rest = strings.TrimPrefix(name, path)
+		} else {
+			rest = strings.TrimPrefix(name, fmt.Sprintf("%s/", path))
+		}
 
 		row := table.Row{
 			rest,
