@@ -31,6 +31,7 @@ func runLsCmd(cmd *cobra.Command, args []string) {
 	decrypt, _ := cmd.Flags().GetBool("decrypt")
 	displayValues, _ := cmd.Flags().GetBool("values")
 	plain, _ := cmd.Flags().GetBool("plain")
+	toEnv, _ := cmd.Flags().GetBool("env")
 
 	fmt.Println(text.FgBlue.Sprintf("Listing parameters for \"%s\"", path))
 
@@ -77,7 +78,11 @@ func runLsCmd(cmd *cobra.Command, args []string) {
 
 		if plain {
 			if displayValues {
-				fmt.Println(fmt.Sprintf("%s: %s", rest, *param.Value))
+				if toEnv {
+					fmt.Printf("%s=%s\n", strings.ToUpper(strings.ReplaceAll(rest, "-", "_")), *param.Value)
+				} else {
+					fmt.Printf("%s: %s\n", rest, *param.Value)
+				}
 			} else {
 				fmt.Println(rest)
 			}
@@ -128,6 +133,7 @@ func init() {
 	lsCmd.Flags().BoolP("decrypt", "d", true, "decrypt \"SecureString\" values")
 	lsCmd.Flags().BoolP("values", "v", false, "display values")
 	lsCmd.Flags().BoolP("plain", "p", false, "plain text instead of table")
+	lsCmd.Flags().BoolP("env", "e", false, "output plain .env format")
 
 	rootCmd.AddCommand(lsCmd)
 }
