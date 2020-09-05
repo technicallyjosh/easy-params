@@ -1,6 +1,6 @@
 module github.com/technicallyjosh/easy-params
 
-go 1.14
+go 1.15
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20200819183940-29e1ff8eb0bb // indirect
@@ -9,7 +9,6 @@ require (
 	github.com/go-openapi/errors v0.19.6 // indirect
 	github.com/go-openapi/strfmt v0.19.5 // indirect
 	github.com/jedib0t/go-pretty v4.3.0+incompatible
-	github.com/kisielk/errcheck v1.2.0 // indirect
 	github.com/magiconair/properties v1.8.2 // indirect
 	github.com/mattn/go-runewidth v0.0.9 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
