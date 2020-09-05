@@ -77,6 +77,7 @@ Usage:
 
 Flags:
   -d, --decrypt     decrypt "SecureString" values (default true)
+  -e, --env         output plain .env format
   -h, --help        help for ls
   -p, --plain       plain text instead of table
   -r, --recursive   recursively get values based on path (default true)
