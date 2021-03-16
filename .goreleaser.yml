@@ -25,7 +25,7 @@ changelog:
       - "^docs:"
       - "^test:"
 brews:
-  - github:
+  - tap:
       owner: technicallyjosh
       name: homebrew-easy-params
     description: Opinionated CLI for easy management of SSM Parameters.
