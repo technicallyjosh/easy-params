@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/ssm"
+	"github.com/aws/aws-sdk-go-v2/service/ssm"
+	"github.com/aws/aws-sdk-go-v2/service/ssm/types"
 	"github.com/jedib0t/go-pretty/table"
 	"github.com/jedib0t/go-pretty/text"
 	"github.com/spf13/cobra"
@@ -44,16 +44,16 @@ func runDiffCmd(cmd *cobra.Command, args []string) {
 	fmt.Println(text.FgBlue.Sprintf("Getting diff between \"%s\" and \"%s\"...", path1, path2))
 
 	options := &getParamsOptions{
-		Client:    ssm.New(session),
+		Client:    ssm.NewFromConfig(awsConfig),
 		Path:      &path1,
-		Recursive: aws.Bool(true),
-		Decrypt:   &decrypt,
+		Recursive: true,
+		Decrypt:   decrypt,
 	}
 
-	params1 := getParams(options, []*ssm.Parameter{}, nil)
+	params1 := getParams(options, []types.Parameter{}, nil)
 
 	options.Path = &path2
-	params2 := getParams(options, []*ssm.Parameter{}, nil)
+	params2 := getParams(options, []types.Parameter{}, nil)
 
 	tw := table.NewWriter()
 	tw.Style().Format.Header = text.FormatLower

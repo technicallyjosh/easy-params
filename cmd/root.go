@@ -1,22 +1,21 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
-	"os"
-
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-
-	"github.com/aws/aws-sdk-go/aws"
-	awsSession "github.com/aws/aws-sdk-go/aws/session"
-	homedir "github.com/mitchellh/go-homedir"
+	"os"
 )
 
 var (
 	version      = ""
 	cfgFile      string
 	showVersion  bool
-	session      *awsSession.Session
+	awsConfig    aws.Config
 	useLocalTime bool
 	region       string
 	loadConfig   bool
@@ -32,7 +31,11 @@ var rootCmd = &cobra.Command{
 		}
 
 		if len(args) == 0 {
-			cmd.Help()
+			err := cmd.Help()
+			if err != nil {
+				panic(err)
+			}
+
 			os.Exit(0)
 		}
 	},
@@ -64,7 +67,7 @@ func initConfig() {
 	} else {
 		home, err := homedir.Dir()
 		if err != nil {
-			fmt.Println(fmt.Sprintf("Error: %s", err.Error()))
+			fmt.Printf("Error: %s\n", err.Error())
 			os.Exit(1)
 		}
 
@@ -84,7 +87,10 @@ func initConfig() {
 		os.Setenv("AWS_SDK_LOAD_CONFIG", "true")
 	}
 
-	session = awsSession.Must(awsSession.NewSession(&aws.Config{
-		Region: &region,
-	}))
+	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
+	if err != nil {
+		panic(err)
+	}
+
+	awsConfig = cfg
 }

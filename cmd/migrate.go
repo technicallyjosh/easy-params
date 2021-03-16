@@ -1,13 +1,14 @@
 package cmd
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"os"
 	"strings"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/ssm"
+	"github.com/aws/aws-sdk-go-v2/service/ssm"
+	"github.com/aws/aws-sdk-go-v2/service/ssm/types"
 	"github.com/jedib0t/go-pretty/text"
 	"github.com/spf13/cobra"
 )
@@ -46,12 +47,12 @@ func runMigrateCmd(cmd *cobra.Command, args []string) {
 		regionTo = regionFrom
 	}
 
-	clientFrom := ssm.New(session, &aws.Config{
-		Region: &regionFrom,
+	clientFrom := ssm.New(ssm.Options{
+		Region: regionFrom,
 	})
 
-	clientTo := ssm.New(session, &aws.Config{
-		Region: &regionTo,
+	clientTo := ssm.New(ssm.Options{
+		Region: regionTo,
 	})
 
 	fmt.Println(text.FgBlue.Sprintf("Migrating %s \"%s\" ==> %s \"%s\"", regionFrom, pathFrom, regionTo, pathTo))
@@ -59,11 +60,11 @@ func runMigrateCmd(cmd *cobra.Command, args []string) {
 	options := &getParamsOptions{
 		Client:    clientFrom,
 		Path:      &pathFrom,
-		Recursive: aws.Bool(true),
-		Decrypt:   aws.Bool(true),
+		Recursive: true,
+		Decrypt:   true,
 	}
 
-	params := getParams(options, []*ssm.Parameter{}, nil)
+	params := getParams(options, []types.Parameter{}, nil)
 
 	fmt.Println(text.FgBlue.Sprintf("Found %d parameters to migrate...", len(params)))
 
@@ -81,10 +82,10 @@ func runMigrateCmd(cmd *cobra.Command, args []string) {
 			Name:      &name,
 			Type:      param.Type,
 			Value:     param.Value,
-			Overwrite: &overwrite,
+			Overwrite: overwrite,
 		}
 
-		if _, err := clientTo.PutParameter(input); err != nil {
+		if _, err := clientTo.PutParameter(context.TODO(), input); err != nil {
 			if strings.HasPrefix(err.Error(), "ParameterAlreadyExists") {
 				fmt.Println(text.FgYellow.Sprintf("%s already exists... To overwrite, add the --overwrite flag.", name))
 				continue

@@ -2,12 +2,13 @@ package cmd
 
 import (
 	"bufio"
+	"context"
 	"errors"
 	"fmt"
 	"os"
 
-	"github.com/aws/aws-sdk-go/aws"
-	ssm "github.com/aws/aws-sdk-go/service/ssm"
+	"github.com/aws/aws-sdk-go-v2/service/ssm"
+	"github.com/aws/aws-sdk-go-v2/service/ssm/types"
 	"github.com/jedib0t/go-pretty/text"
 	"github.com/spf13/cobra"
 )
@@ -29,19 +30,19 @@ func runRmCmd(cmd *cobra.Command, args []string) {
 	path := args[0]
 	recursive, _ := cmd.Flags().GetBool("recursive")
 
-	client := ssm.New(session)
+	client := ssm.NewFromConfig(awsConfig)
 
-	var names []*string
+	var names []string
 
 	if recursive {
 		opts := &getParamsOptions{
 			Client:    client,
 			Path:      &path,
-			Recursive: aws.Bool(true),
-			Decrypt:   aws.Bool(false),
+			Recursive: true,
+			Decrypt:   false,
 		}
 
-		params := getParams(opts, []*ssm.Parameter{}, nil)
+		params := getParams(opts, []types.Parameter{}, nil)
 
 		if len(params) == 0 {
 			fmt.Println("No parameters to delete at the specified path.")
@@ -53,7 +54,7 @@ func runRmCmd(cmd *cobra.Command, args []string) {
 		fmt.Println(text.FgYellow.Sprint("The following parameters will be removed..."))
 
 		for _, param := range params {
-			names = append(names, param.Name)
+			names = append(names, *param.Name)
 
 			fmt.Println(*param.Name)
 		}
@@ -71,7 +72,7 @@ func runRmCmd(cmd *cobra.Command, args []string) {
 		for _, arg := range args {
 			// declare in loop for pointer to not be repeated
 			str := arg
-			names = append(names, &str)
+			names = append(names, str)
 		}
 	}
 
@@ -80,7 +81,7 @@ func runRmCmd(cmd *cobra.Command, args []string) {
 	num := 0
 
 	for _, chunk := range chunks {
-		res, err := client.DeleteParameters(&ssm.DeleteParametersInput{
+		res, err := client.DeleteParameters(context.TODO(), &ssm.DeleteParametersInput{
 			Names: chunk,
 		})
 

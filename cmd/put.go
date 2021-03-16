@@ -2,12 +2,14 @@ package cmd
 
 import (
 	"bufio"
+	"context"
 	"errors"
 	"fmt"
 	"os"
 	"strings"
 
-	ssm "github.com/aws/aws-sdk-go/service/ssm"
+	"github.com/aws/aws-sdk-go-v2/service/ssm"
+	"github.com/aws/aws-sdk-go-v2/service/ssm/types"
 	"github.com/jedib0t/go-pretty/text"
 	"github.com/spf13/cobra"
 )
@@ -37,13 +39,13 @@ var putCmd = &cobra.Command{
 	},
 }
 
-func runPutCmdContext(cmd *cobra.Command, args []string, context string) {
+func runPutCmdContext(cmd *cobra.Command, args []string, ctx string) {
 	overwrite, _ := cmd.Flags().GetBool("overwrite")
 	valueType, _ := cmd.Flags().GetString("type")
 
-	client := ssm.New(session)
+	client := ssm.NewFromConfig(awsConfig)
 
-	ctxMessage := fmt.Sprintf("context = /%s", context)
+	ctxMessage := fmt.Sprintf("context = /%s", ctx)
 	kvMessage := fmt.Sprintf("enter key/value pairs to put in the format of \"key value\".")
 
 	fmt.Printf("%v\n", text.FgYellow.Sprint(ctxMessage))
@@ -75,13 +77,13 @@ func runPutCmdContext(cmd *cobra.Command, args []string, context string) {
 			continue
 		}
 
-		path := fmt.Sprintf("/%s/%s", context, param)
+		path := fmt.Sprintf("/%s/%s", ctx, param)
 
-		_, err := client.PutParameter(&ssm.PutParameterInput{
+		_, err := client.PutParameter(context.TODO(), &ssm.PutParameterInput{
 			Name:      &path,
 			Value:     &value,
-			Type:      &valueType,
-			Overwrite: &overwrite,
+			Type:      types.ParameterType(valueType),
+			Overwrite: overwrite,
 		})
 
 		if err != nil {
@@ -100,13 +102,13 @@ func runPutCmd(cmd *cobra.Command, args []string) {
 	overwrite, _ := cmd.Flags().GetBool("overwrite")
 	valueType, _ := cmd.Flags().GetString("type")
 
-	client := ssm.New(session)
+	client := ssm.NewFromConfig(awsConfig)
 
-	_, err := client.PutParameter(&ssm.PutParameterInput{
+	_, err := client.PutParameter(context.TODO(), &ssm.PutParameterInput{
 		Name:      &path,
 		Value:     &value,
-		Type:      &valueType,
-		Overwrite: &overwrite,
+		Type:      types.ParameterType(valueType),
+		Overwrite: overwrite,
 	})
 
 	if err != nil {

@@ -1,11 +1,13 @@
 package cmd
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"strings"
 
-	ssm "github.com/aws/aws-sdk-go/service/ssm"
+	"github.com/aws/aws-sdk-go-v2/service/ssm"
+	"github.com/aws/aws-sdk-go-v2/service/ssm/types"
 	"github.com/jedib0t/go-pretty/table"
 	"github.com/jedib0t/go-pretty/text"
 	"github.com/spf13/cobra"
@@ -36,13 +38,13 @@ func runLsCmd(cmd *cobra.Command, args []string) {
 	fmt.Println(text.FgBlue.Sprintf("Listing parameters for \"%s\"", path))
 
 	options := &getParamsOptions{
-		Client:    ssm.New(session),
+		Client:    ssm.NewFromConfig(awsConfig),
 		Path:      &path,
-		Recursive: &recursive,
-		Decrypt:   &decrypt,
+		Recursive: recursive,
+		Decrypt:   decrypt,
 	}
 
-	params := getParams(options, []*ssm.Parameter{}, nil)
+	params := getParams(options, []types.Parameter{}, nil)
 
 	sortParams(params)
 
@@ -68,7 +70,7 @@ func runLsCmd(cmd *cobra.Command, args []string) {
 
 		row := table.Row{
 			rest,
-			*param.Type,
+			param.Type,
 			formatDate(param.LastModifiedDate),
 		}
 
@@ -97,13 +99,13 @@ func runLsCmd(cmd *cobra.Command, args []string) {
 }
 
 type getParamsOptions struct {
-	Client    *ssm.SSM
+	Client    *ssm.Client
 	Path      *string
-	Recursive *bool
-	Decrypt   *bool
+	Recursive bool
+	Decrypt   bool
 }
 
-func getParams(options *getParamsOptions, params []*ssm.Parameter, nextToken *string) []*ssm.Parameter {
+func getParams(options *getParamsOptions, params []types.Parameter, nextToken *string) []types.Parameter {
 	cfg := &ssm.GetParametersByPathInput{
 		Path:           options.Path,
 		Recursive:      options.Recursive,
@@ -114,7 +116,7 @@ func getParams(options *getParamsOptions, params []*ssm.Parameter, nextToken *st
 		cfg.NextToken = nextToken
 	}
 
-	out, err := options.Client.GetParametersByPath(cfg)
+	out, err := options.Client.GetParametersByPath(context.TODO(), cfg)
 	if err != nil {
 		panic(err)
 	}
