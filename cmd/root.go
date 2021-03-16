@@ -22,7 +22,7 @@ var (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "ezparams",
+	Use:   "easy-params",
 	Short: "An easy AWS Parameter Store CLI",
 	Run: func(cmd *cobra.Command, args []string) {
 		if showVersion {
@@ -53,7 +53,7 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.ezparams.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.easy-params.yaml)")
 	rootCmd.PersistentFlags().BoolVar(&showVersion, "version", false, "show version")
 	rootCmd.PersistentFlags().BoolVarP(&useLocalTime, "local-time", "l", true, "convert UTC to local time")
 	rootCmd.PersistentFlags().StringVar(&region, "region", "", "AWS region to use")
@@ -71,9 +71,9 @@ func initConfig() {
 			os.Exit(1)
 		}
 
-		// Search config in home directory with name ".ezparams" (without extension).
+		// Search config in home directory with name ".easy-params" (without extension).
 		viper.AddConfigPath(home)
-		viper.SetConfigName(".ezparams")
+		viper.SetConfigName(".easy-params")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match

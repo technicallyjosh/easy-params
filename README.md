@@ -28,12 +28,12 @@ $ brew install easy-params
 ## CLI
 
 ```console
-$ ezparams
+$ easy-params
 An easy AWS Parameter Store CLI
 
 Usage:
-  ezparams [flags]
-  ezparams [command]
+  easy-params [flags]
+  easy-params [command]
 
 Available Commands:
   diff        Shows the difference recursively between 2 paths.
@@ -46,14 +46,14 @@ Available Commands:
   rm          Remove parameter(s) by path
 
 Flags:
-      --config string   config file (default is $HOME/.ezparams.yaml)
-  -h, --help            help for ezparams
+      --config string   config file (default is $HOME/.easy-params.yaml)
+  -h, --help            help for easy-params
       --load-config     load aws config from ~/.aws/config (default true)
   -l, --local-time      convert UTC to local time (default true)
       --region string   AWS region to use
       --version         show version
 
-Use "ezparams [command] --help" for more information about a command.
+Use "easy-params [command] --help" for more information about a command.
 ```
 
 ## Basic Usage
@@ -69,11 +69,11 @@ by default.
 Lists parameters in specified path.
 
 ```console
-$ ezparams ls --help
+$ easy-params ls --help
 List parameters by path
 
 Usage:
-  ezparams ls <path> [flags]
+  easy-params ls <path> [flags]
 
 Flags:
   -d, --decrypt     decrypt "SecureString" values (default true)
@@ -84,7 +84,7 @@ Flags:
   -v, --values      display values
 
 Global Flags:
-      --config string   config file (default is $HOME/.ezparams.yaml)
+      --config string   config file (default is $HOME/.easy-params.yaml)
       --load-config     load aws config from ~/.aws/config (default true)
   -l, --local-time      convert UTC to local time (default true)
       --region string   AWS region to use
@@ -96,11 +96,11 @@ Global Flags:
 Put a parameter to the specified path.
 
 ```console
-$ ezparams put --help
+$ easy-params put --help
 Put parameter by path
 
 Usage:
-  ezparams put <path> <value> [flags]
+  easy-params put <path> <value> [flags]
 
 Flags:
   -c, --context string   context mode for setting many values.
@@ -109,7 +109,7 @@ Flags:
   -t, --type string      type of parameter. (default "SecureString")
 
 Global Flags:
-      --config string   config file (default is $HOME/.ezparams.yaml)
+      --config string   config file (default is $HOME/.easy-params.yaml)
       --load-config     load aws config from ~/.aws/config (default true)
   -l, --local-time      convert UTC to local time (default true)
       --region string   AWS region to use
@@ -121,18 +121,18 @@ Global Flags:
 Remove a parameter by path. You can also remove recursively by path with the --recursive flag.
 
 ```console
-$ ezparams rm --help
+$ easy-params rm --help
 Remove parameter(s) by path
 
 Usage:
-  ezparams rm <path(s)> [flags]
+  easy-params rm <path(s)> [flags]
 
 Flags:
   -h, --help        help for rm
       --recursive   remove all children on path recursively
 
 Global Flags:
-      --config string   config file (default is $HOME/.ezparams.yaml)
+      --config string   config file (default is $HOME/.easy-params.yaml)
       --load-config     load aws config from ~/.aws/config (default true)
   -l, --local-time      convert UTC to local time (default true)
       --region string   AWS region to use
@@ -145,11 +145,11 @@ Migrate parameters from one path to another. Supports region to region. _This co
 same region if `region-to` is not specified._
 
 ```console
-$ ezparams migrate --help
+$ easy-params migrate --help
 Migrate parameters by path
 
 Usage:
-  ezparams migrate <source path> [destination path] [flags]
+  easy-params migrate <source path> [destination path] [flags]
 
 Flags:
   -h, --help                 help for migrate
@@ -158,7 +158,7 @@ Flags:
   -t, --region-to string     the region to migrate to
 
 Global Flags:
-      --config string   config file (default is $HOME/.ezparams.yaml)
+      --config string   config file (default is $HOME/.easy-params.yaml)
       --load-config     load aws config from ~/.aws/config (default true)
   -l, --local-time      convert UTC to local time (default true)
       --region string   AWS region to use
@@ -170,11 +170,11 @@ Global Flags:
 Simple diff between 2 paths. Can also diff values.
 
 ```console
-$ ezparams diff --help
+$ easy-params diff --help
 Shows the difference recursively between 2 paths.
 
 Usage:
-  ezparams diff <path 1> <path 2> [flags]
+  easy-params diff <path 1> <path 2> [flags]
 
 Flags:
   -d, --decrypt           decrypt "SecureString" values (default true)
@@ -183,7 +183,7 @@ Flags:
   -w, --width-limit int   width limit of value output
 
 Global Flags:
-      --config string   config file (default is $HOME/.ezparams.yaml)
+      --config string   config file (default is $HOME/.easy-params.yaml)
       --load-config     load aws config from ~/.aws/config (default true)
   -l, --local-time      convert UTC to local time (default true)
       --region string   AWS region to use

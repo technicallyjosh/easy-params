@@ -2,7 +2,7 @@ before:
   hooks:
     - go mod tidy
 builds:
-  - binary: ezparams
+  - binary: easy-params
     env:
       - CGO_ENABLED=0
     ldflags:
@@ -15,15 +15,15 @@ archives:
       386: i386
       amd64: x86_64
 checksum:
-  name_template: 'checksums.txt'
+  name_template: "checksums.txt"
 snapshot:
-  name_template: '{{ .Tag }}-next'
+  name_template: "{{ .Tag }}-next"
 changelog:
   sort: asc
   filters:
     exclude:
-      - '^docs:'
-      - '^test:'
+      - "^docs:"
+      - "^test:"
 brews:
   - github:
       owner: technicallyjosh
@@ -31,4 +31,4 @@ brews:
     description: Opinionated CLI for easy management of SSM Parameters.
     homepage: https://github.com/technicallyjosh/easy-params
     test: |
-      system "#{bin}/ezparams --version"
+      system "#{bin}/easy-params --version"
