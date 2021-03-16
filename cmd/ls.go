@@ -74,16 +74,23 @@ func runLsCmd(cmd *cobra.Command, args []string) {
 			formatDate(param.LastModifiedDate),
 		}
 
+		val := *param.Value
+
+		// seems like the upgrade to v2 of the aws-sdk sends back a new line on values :shrug:
+		if strings.HasSuffix(val, "\n") {
+			val = strings.TrimSuffix(val, "\n")
+		}
+
 		if displayValues {
-			row = insertColumn(row, 1, *param.Value)
+			row = insertColumn(row, 1, val)
 		}
 
 		if plain {
 			if displayValues {
 				if toEnv {
-					fmt.Printf("%s=%s\n", strings.ToUpper(strings.ReplaceAll(rest, "-", "_")), *param.Value)
+					fmt.Printf("%s=%s\n", strings.ToUpper(strings.ReplaceAll(rest, "-", "_")), val)
 				} else {
-					fmt.Printf("%s: %s\n", rest, *param.Value)
+					fmt.Printf("%s: %s\n", rest, val)
 				}
 			} else {
 				fmt.Println(rest)
