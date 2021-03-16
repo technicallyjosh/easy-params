@@ -76,11 +76,6 @@ func runLsCmd(cmd *cobra.Command, args []string) {
 
 		val := *param.Value
 
-		// seems like the upgrade to v2 of the aws-sdk sends back a new line on values :shrug:
-		if strings.HasSuffix(val, "\n") {
-			val = strings.TrimSuffix(val, "\n")
-		}
-
 		if displayValues {
 			row = insertColumn(row, 1, val)
 		}
@@ -126,6 +121,16 @@ func getParams(options *getParamsOptions, params []types.Parameter, nextToken *s
 	out, err := options.Client.GetParametersByPath(context.TODO(), cfg)
 	if err != nil {
 		panic(err)
+	}
+
+	for i := 0; i < len(out.Parameters); i++ {
+		val := *out.Parameters[i].Value
+
+		// seems like the upgrade to v2 of the aws-sdk sends back a new line on values :shrug:
+		if strings.HasSuffix(val, "\n") {
+			trimmed := strings.TrimSuffix(val, "\n")
+			out.Parameters[i].Value = &trimmed
+		}
 	}
 
 	params = append(params, out.Parameters...)
