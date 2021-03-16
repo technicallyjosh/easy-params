@@ -46,7 +46,7 @@ func runPutCmdContext(cmd *cobra.Command, args []string, ctx string) {
 	client := ssm.NewFromConfig(awsConfig)
 
 	ctxMessage := fmt.Sprintf("context = /%s", ctx)
-	kvMessage := fmt.Sprintf("enter key/value pairs to put in the format of \"key value\".")
+	kvMessage := "enter key/value pairs to put in the format of \"key value\"."
 
 	fmt.Printf("%v\n", text.FgYellow.Sprint(ctxMessage))
 	fmt.Printf("%v\n", text.FgYellow.Sprintf("overwrite = %v", overwrite))
