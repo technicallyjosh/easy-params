@@ -96,6 +96,7 @@ Global Flags:
 Get a single parameter by path.
 
 ```console
+$ easy-params get --help
 Get parameter value by path
 
 Usage:
