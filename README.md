@@ -91,6 +91,28 @@ Global Flags:
       --version         show version
 ```
 
+### `get`
+
+Get a single parameter by path.
+
+```console
+Get parameter value by path
+
+Usage:
+  easy-params get <path> [flags]
+
+Flags:
+  -d, --decrypt   decrypt "SecureString" value (default true)
+  -h, --help      help for get
+
+Global Flags:
+      --config string   config file (default is $HOME/.easy-params.yaml)
+      --load-config     load aws config from ~/.aws/config (default true)
+  -l, --local-time      convert UTC to local time (default true)
+      --region string   AWS region to use
+      --version         show version
+```
+
 ### `put`
 
 Put a parameter to the specified path.
