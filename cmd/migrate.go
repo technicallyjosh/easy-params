@@ -47,12 +47,12 @@ func runMigrateCmd(cmd *cobra.Command, args []string) {
 		regionTo = regionFrom
 	}
 
-	clientFrom := ssm.New(ssm.Options{
-		Region: regionFrom,
+	clientFrom := ssm.NewFromConfig(awsConfig, func(o *ssm.Options) {
+		o.Region = regionFrom
 	})
 
-	clientTo := ssm.New(ssm.Options{
-		Region: regionTo,
+	clientTo := ssm.NewFromConfig(awsConfig, func(o *ssm.Options) {
+		o.Region = regionTo
 	})
 
 	fmt.Println(text.FgBlue.Sprintf("Migrating %s \"%s\" ==> %s \"%s\"", regionFrom, pathFrom, regionTo, pathTo))
