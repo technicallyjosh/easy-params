@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/atotto/clipboard"
 	"github.com/aws/aws-sdk-go-v2/service/ssm"
 	"github.com/spf13/cobra"
 )
@@ -26,6 +27,7 @@ var getCmd = &cobra.Command{
 func runGetCmd(cmd *cobra.Command, args []string) {
 	path := fmt.Sprintf("/%s", stripSlash(args[0]))
 	decrypt, _ := cmd.Flags().GetBool("decrypt")
+	copy, _ := cmd.Flags().GetBool("copy")
 
 	client := ssm.NewFromConfig(awsConfig)
 
@@ -43,11 +45,19 @@ func runGetCmd(cmd *cobra.Command, args []string) {
 		val = strings.TrimSuffix(val, "\n")
 	}
 
-	fmt.Println(val)
+	if copy {
+		if err := clipboard.WriteAll(val); err != nil {
+			panic(err)
+		}
+		fmt.Println("Value copied to clipboard!")
+	} else {
+		fmt.Println(val)
+	}
 }
 
 func init() {
 	getCmd.Flags().BoolP("decrypt", "d", true, "decrypt \"SecureString\" value")
+	getCmd.Flags().BoolP("copy", "c", false, "copy to clipboard")
 
 	rootCmd.AddCommand(getCmd)
 }
