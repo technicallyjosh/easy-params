@@ -20,8 +20,8 @@ var putCmd = &cobra.Command{
 	Args: func(cmd *cobra.Command, args []string) error {
 		context, _ := cmd.Flags().GetString("context")
 
-		if context == "" && len(args) < 2 {
-			return errors.New("requires a path and a value")
+		if context == "" && len(args) < 1 {
+			return errors.New("requires a path")
 		}
 
 		return nil
@@ -98,9 +98,24 @@ func runPutCmdContext(cmd *cobra.Command, args []string, ctx string) {
 
 func runPutCmd(cmd *cobra.Command, args []string) {
 	path := args[0]
-	value := args[1]
 	overwrite, _ := cmd.Flags().GetBool("overwrite")
 	valueType, _ := cmd.Flags().GetString("type")
+	valueFlag, _ := cmd.Flags().GetString("value")
+
+	value := ""
+	if len(args) > 1 {
+		value = args[1]
+	}
+
+	if value == "" {
+		// try to use the flag
+		if valueFlag == "" {
+			fmt.Println(text.FgRed.Sprint("Value argument or flag is required."))
+			os.Exit(1)
+		}
+
+		value = valueFlag
+	}
 
 	client := ssm.NewFromConfig(awsConfig)
 
@@ -127,6 +142,7 @@ func init() {
 	putCmd.Flags().BoolP("overwrite", "o", false, "overwrite param if exists.")
 	putCmd.Flags().StringP("type", "t", "SecureString", "type of parameter.")
 	putCmd.Flags().StringP("context", "c", "", "context mode for setting many values.")
+	putCmd.Flags().StringP("value", "v", "", "value to store.")
 
 	rootCmd.AddCommand(putCmd)
 }

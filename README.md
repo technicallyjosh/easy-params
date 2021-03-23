@@ -130,6 +130,7 @@ Flags:
   -h, --help             help for put
   -o, --overwrite        overwrite param if exists.
   -t, --type string      type of parameter. (default "SecureString")
+  -v, --value string     value to store.
 
 Global Flags:
       --config string   config file (default is $HOME/.easy-params.yaml)
