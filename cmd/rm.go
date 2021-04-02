@@ -42,14 +42,12 @@ func runRmCmd(cmd *cobra.Command, args []string) {
 			Decrypt:   false,
 		}
 
-		params := getParams(opts, []types.Parameter{}, nil)
+		params := GetParameters(opts, []types.Parameter{}, nil)
 
 		if len(params) == 0 {
 			fmt.Println("No parameters to delete at the specified path.")
 			os.Exit(0)
 		}
-
-		sortParams(params)
 
 		fmt.Println(text.FgYellow.Sprint("The following parameters will be removed..."))
 

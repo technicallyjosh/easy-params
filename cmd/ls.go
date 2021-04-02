@@ -44,9 +44,7 @@ func runLsCmd(cmd *cobra.Command, args []string) {
 		Decrypt:   decrypt,
 	}
 
-	params := getParams(options, []types.Parameter{}, nil)
-
-	sortParams(params)
+	params := GetParameters(options, []types.Parameter{}, nil)
 
 	tw := table.NewWriter()
 
@@ -107,7 +105,7 @@ type getParamsOptions struct {
 	Decrypt   bool
 }
 
-func getParams(options *getParamsOptions, params []types.Parameter, nextToken *string) []types.Parameter {
+func GetParameters(options *getParamsOptions, params []types.Parameter, nextToken *string) []types.Parameter {
 	cfg := &ssm.GetParametersByPathInput{
 		Path:           options.Path,
 		Recursive:      options.Recursive,
@@ -124,20 +122,18 @@ func getParams(options *getParamsOptions, params []types.Parameter, nextToken *s
 	}
 
 	for i := 0; i < len(out.Parameters); i++ {
-		val := *out.Parameters[i].Value
+		val := strings.TrimSuffix(*out.Parameters[i].Value, "\n")
 
-		// seems like the upgrade to v2 of the aws-sdk sends back a new line on values :shrug:
-		if strings.HasSuffix(val, "\n") {
-			trimmed := strings.TrimSuffix(val, "\n")
-			out.Parameters[i].Value = &trimmed
-		}
+		out.Parameters[i].Value = &val
 	}
 
 	params = append(params, out.Parameters...)
 
 	if out.NextToken != nil {
-		return getParams(options, params, out.NextToken)
+		return GetParameters(options, params, out.NextToken)
 	}
+
+	sortParameters(params)
 
 	return params
 }

@@ -38,8 +38,8 @@ func getStringChunks(items []string, chunkSize int) (chunks [][]string) {
 	return append(chunks, items)
 }
 
-// sortParams sorts parameters by name.
-func sortParams(params []types.Parameter) {
+// sortParameters sorts parameters by name.
+func sortParameters(params []types.Parameter) {
 	sort.Slice(params, func(i, j int) bool {
 		return strings.ToLower(*params[i].Name) < strings.ToLower(*params[j].Name)
 	})

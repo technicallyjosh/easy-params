@@ -31,28 +31,45 @@ func runGetCmd(cmd *cobra.Command, args []string) {
 
 	client := ssm.NewFromConfig(awsConfig)
 
-	out, err := client.GetParameter(context.TODO(), &ssm.GetParameterInput{
-		Name:           &path,
-		WithDecryption: decrypt,
+	val, err := GetParameter(&GetParameterOptions{
+		Client:  client,
+		Name:    path,
+		Decrypt: decrypt,
 	})
 	if err != nil {
 		panic(err)
-	}
-
-	val := *out.Parameter.Value
-
-	if strings.HasSuffix(val, "\n") {
-		val = strings.TrimSuffix(val, "\n")
 	}
 
 	if copy {
 		if err := clipboard.WriteAll(val); err != nil {
 			panic(err)
 		}
+
 		fmt.Println("Value copied to clipboard!")
 	} else {
 		fmt.Println(val)
 	}
+}
+
+// GetParameterOptions represents options for GetParameter
+type GetParameterOptions struct {
+	Client  *ssm.Client
+	Name    string
+	Decrypt bool
+}
+
+// GetParamter returns a parameter by name while removing any trailing new-line
+func GetParameter(options *GetParameterOptions) (string, error) {
+	out, err := options.Client.GetParameter(context.TODO(), &ssm.GetParameterInput{
+		Name:           &options.Name,
+		WithDecryption: options.Decrypt,
+	})
+	if err != nil {
+		return "", err
+	}
+
+	// return val, nil
+	return strings.TrimSuffix(*out.Parameter.Value, "\n"), nil
 }
 
 func init() {

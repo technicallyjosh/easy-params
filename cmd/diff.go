@@ -50,10 +50,10 @@ func runDiffCmd(cmd *cobra.Command, args []string) {
 		Decrypt:   decrypt,
 	}
 
-	params1 := getParams(options, []types.Parameter{}, nil)
+	params1 := GetParameters(options, []types.Parameter{}, nil)
 
 	options.Path = &path2
-	params2 := getParams(options, []types.Parameter{}, nil)
+	params2 := GetParameters(options, []types.Parameter{}, nil)
 
 	tw := table.NewWriter()
 	tw.Style().Format.Header = text.FormatLower
