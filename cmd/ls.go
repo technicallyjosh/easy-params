@@ -37,7 +37,7 @@ func runLsCmd(cmd *cobra.Command, args []string) {
 
 	fmt.Println(text.FgBlue.Sprintf("Listing parameters for \"%s\"", path))
 
-	options := &getParamsOptions{
+	options := &GetParametersOptions{
 		Client:    ssm.NewFromConfig(awsConfig),
 		Path:      &path,
 		Recursive: recursive,
@@ -98,14 +98,14 @@ func runLsCmd(cmd *cobra.Command, args []string) {
 	}
 }
 
-type getParamsOptions struct {
+type GetParametersOptions struct {
 	Client    *ssm.Client
 	Path      *string
 	Recursive bool
 	Decrypt   bool
 }
 
-func GetParameters(options *getParamsOptions, params []types.Parameter, nextToken *string) []types.Parameter {
+func GetParameters(options *GetParametersOptions, params []types.Parameter, nextToken *string) []types.Parameter {
 	cfg := &ssm.GetParametersByPathInput{
 		Path:           options.Path,
 		Recursive:      options.Recursive,

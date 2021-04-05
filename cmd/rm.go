@@ -35,7 +35,7 @@ func runRmCmd(cmd *cobra.Command, args []string) {
 	var names []string
 
 	if recursive {
-		opts := &getParamsOptions{
+		opts := &GetParametersOptions{
 			Client:    client,
 			Path:      &path,
 			Recursive: true,

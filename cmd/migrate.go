@@ -57,7 +57,7 @@ func runMigrateCmd(cmd *cobra.Command, args []string) {
 
 	fmt.Println(text.FgBlue.Sprintf("Migrating %s \"%s\" ==> %s \"%s\"", regionFrom, pathFrom, regionTo, pathTo))
 
-	options := &getParamsOptions{
+	options := &GetParametersOptions{
 		Client:    clientFrom,
 		Path:      &pathFrom,
 		Recursive: true,

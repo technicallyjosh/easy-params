@@ -43,7 +43,7 @@ func runDiffCmd(cmd *cobra.Command, args []string) {
 
 	fmt.Println(text.FgBlue.Sprintf("Getting diff between \"%s\" and \"%s\"...", path1, path2))
 
-	options := &getParamsOptions{
+	options := &GetParametersOptions{
 		Client:    ssm.NewFromConfig(awsConfig),
 		Path:      &path1,
 		Recursive: true,
