@@ -62,7 +62,7 @@ type GetParameterOptions struct {
 func GetParameter(options *GetParameterOptions) (string, error) {
 	out, err := options.Client.GetParameter(context.TODO(), &ssm.GetParameterInput{
 		Name:           &options.Name,
-		WithDecryption: options.Decrypt,
+		WithDecryption: &options.Decrypt,
 	})
 	if err != nil {
 		return "", err
