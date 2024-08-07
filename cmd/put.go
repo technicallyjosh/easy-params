@@ -83,7 +83,7 @@ func runPutCmdContext(cmd *cobra.Command, args []string, ctx string) {
 			Name:      &path,
 			Value:     &value,
 			Type:      types.ParameterType(valueType),
-			Overwrite: overwrite,
+			Overwrite: &overwrite,
 		})
 
 		if err != nil {
@@ -123,7 +123,7 @@ func runPutCmd(cmd *cobra.Command, args []string) {
 		Name:      &path,
 		Value:     &value,
 		Type:      types.ParameterType(valueType),
-		Overwrite: overwrite,
+		Overwrite: &overwrite,
 	})
 
 	if err != nil {

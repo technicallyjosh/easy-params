@@ -82,7 +82,7 @@ func runMigrateCmd(cmd *cobra.Command, args []string) {
 			Name:      &name,
 			Type:      param.Type,
 			Value:     param.Value,
-			Overwrite: overwrite,
+			Overwrite: &overwrite,
 		}
 
 		if _, err := clientTo.PutParameter(context.TODO(), input); err != nil {

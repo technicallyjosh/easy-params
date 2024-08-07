@@ -108,8 +108,8 @@ type GetParametersOptions struct {
 func GetParameters(options *GetParametersOptions, params []types.Parameter, nextToken *string) []types.Parameter {
 	cfg := &ssm.GetParametersByPathInput{
 		Path:           options.Path,
-		Recursive:      options.Recursive,
-		WithDecryption: options.Decrypt,
+		Recursive:      &options.Recursive,
+		WithDecryption: &options.Decrypt,
 	}
 
 	if nextToken != nil {
