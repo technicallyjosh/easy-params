@@ -13,8 +13,11 @@ jobs:
         with:
           go-version: "^1.16.0"
       - name: Release via goreleaser
-        uses: goreleaser/goreleaser-action@master
+        uses: goreleaser/goreleaser-action@v6
         with:
+          distribution: goreleaser
+          #To keep same behavior
+          version: '~> v1'
           args: release
         env:
           GITHUB_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
