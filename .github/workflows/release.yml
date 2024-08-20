@@ -16,8 +16,7 @@ jobs:
         uses: goreleaser/goreleaser-action@v6
         with:
           distribution: goreleaser
-          #To keep same behavior
-          version: '~> v1'
+          version: '~> v2'
           args: release
         env:
           GITHUB_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
