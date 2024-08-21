@@ -2,10 +2,10 @@ name: Build
 on:
   push:
     branches:
-      - "master"
+      - main
   pull_request:
     branches:
-      - "*"
+      - '*'
 jobs:
   build:
     strategy:
@@ -14,10 +14,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     name: Build & Test
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
         with:
-          go-version: "^1.16.0"
+          go-version: "^1.22.0"
       - run: go mod tidy
       - name: Build & Test
         run: |
