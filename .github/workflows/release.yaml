@@ -21,4 +21,4 @@ jobs:
           version: '~> v2'
           args: release
         env:
-          GITHUB_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_SECRET }}
